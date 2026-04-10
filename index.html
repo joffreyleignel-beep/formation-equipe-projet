@@ -1,1 +1,870 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestion de projet & Collaboration asynchrone — APF France handicap</title>
+  <meta name="description" content="Formation interne APF France handicap — Gestion de projet & Collaboration asynchrone sur Microsoft 365. Blended learning, parcours adaptatif, Qualiopi." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --apf-blue:    #00536A;
+      --apf-yellow:  #F7A916;
+      --apf-yellow-dark: #C8870A;
+      --bg:          #FAF8F4;
+      --surface:     #FFFFFF;
+      --text:        #0D2B33;
+      --muted:       #5E7880;
+      --border:      #E4E0D8;
+      --tag-bg:      #FFF4D9;
+      --tag-color:   #7A4F00;
+      --radius:      12px;
+      --shadow:      0 4px 24px rgba(0,83,106,.10);
+      --shadow-sm:   0 2px 8px rgba(0,83,106,.07);
+      --font-head:   'Syne', sans-serif;
+      --font-body:   'DM Sans', sans-serif;
+    }
 
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+
+    /* ── UTILITIES ── */
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+    .tag {
+      display: inline-flex; align-items: center; gap: .35rem;
+      background: var(--tag-bg); color: var(--tag-color);
+      font-family: var(--font-head); font-size: .72rem; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+      border-radius: 999px; padding: .28rem .8rem;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .75rem 1.5rem; border-radius: 999px;
+      font-family: var(--font-head); font-weight: 700; font-size: .88rem;
+      text-decoration: none; transition: transform .18s, box-shadow .18s;
+      cursor: pointer; border: none;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.15); }
+    .btn-primary { background: var(--apf-yellow); color: var(--text); }
+    .btn-outline { background: transparent; color: var(--apf-blue); border: 2px solid var(--apf-blue); }
+    .btn-red { background: var(--apf-blue); color: #fff; }
+    .section-label {
+      font-family: var(--font-head); font-size: .72rem; font-weight: 800;
+      letter-spacing: .14em; text-transform: uppercase; color: var(--apf-red);
+      margin-bottom: .6rem;
+    }
+    .section-title {
+      font-family: var(--font-head); font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 800; line-height: 1.15; color: var(--apf-blue);
+      margin-bottom: 1rem;
+    }
+
+    /* ── SKIP LINK (accessibility) ── */
+    .skip-link {
+      position: absolute; top: -999px; left: 0;
+      background: var(--apf-blue); color: #fff;
+      padding: .5rem 1rem; z-index: 9999; font-weight: 700;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ── HEADER / HERO ── */
+    header {
+      background: var(--apf-blue);
+      position: relative; overflow: hidden;
+    }
+    .header-stripe {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 6px;
+      background: linear-gradient(90deg, var(--apf-yellow) 0%, #FFD166 100%);
+    }
+    .header-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2rem; align-items: center;
+      padding: 4rem 1.5rem 5rem;
+      max-width: 1080px; margin: 0 auto;
+    }
+    .header-logo-bar {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .logo-placeholder {
+      width: 120px; height: 48px;
+      background: #fff; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .logo-placeholder img { height: 40px; object-fit: contain; }
+    .logo-fallback {
+      font-family: var(--font-head); font-size: .75rem; font-weight: 800;
+      color: var(--apf-blue); text-align: center; line-height: 1.2; padding: 4px 8px;
+    }
+    .header-qualiopi {
+      background: rgba(255,255,255,.12); border-radius: 6px;
+      padding: .3rem .75rem;
+      font-family: var(--font-head); font-size: .68rem; font-weight: 700;
+      color: rgba(255,255,255,.9); letter-spacing: .08em; text-transform: uppercase;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-head); font-size: .72rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: rgba(255,255,255,.65); margin-bottom: .75rem;
+    }
+    .hero-title {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800; line-height: 1.1; color: #fff;
+      margin-bottom: 1.2rem;
+    }
+    .hero-title span { color: var(--apf-yellow); }
+    .hero-sub {
+      font-size: 1rem; color: rgba(255,255,255,.78);
+      margin-bottom: 2rem; max-width: 480px;
+    }
+    .hero-ctas { display: flex; gap: .75rem; flex-wrap: wrap; }
+    .hero-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+    }
+    .stat-card {
+      background: rgba(255,255,255,.1);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: var(--radius);
+      padding: 1.25rem 1rem;
+      text-align: center;
+    }
+    .stat-card .number {
+      font-family: var(--font-head); font-size: 2rem; font-weight: 800; color: #fff;
+      line-height: 1;
+    }
+    .stat-card .stat-accent { color: var(--apf-yellow); }
+    .stat-card .label {
+      font-size: .78rem; color: rgba(255,255,255,.7); margin-top: .4rem; line-height: 1.3;
+    }
+    .hero-format-pills {
+      display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1.5rem;
+    }
+    .pill {
+      background: rgba(255,255,255,.15); color: #fff;
+      border-radius: 999px; padding: .3rem .85rem;
+      font-size: .75rem; font-weight: 500; letter-spacing: .03em;
+    }
+
+    /* ── NAV ANCHOR ── */
+    .nav-anchor {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-anchor ul {
+      list-style: none; display: flex; gap: 0; overflow-x: auto;
+      max-width: 1080px; margin: 0 auto; padding: 0 1.5rem;
+    }
+    .nav-anchor ul::-webkit-scrollbar { height: 3px; }
+    .nav-anchor ul::-webkit-scrollbar-thumb { background: var(--apf-blue); }
+    .nav-anchor li a {
+      display: block; padding: .9rem 1.1rem;
+      font-family: var(--font-head); font-size: .78rem; font-weight: 700;
+      letter-spacing: .05em; text-transform: uppercase; text-decoration: none;
+      color: var(--muted); white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      transition: color .18s, border-color .18s;
+    }
+    .nav-anchor li a:hover { color: var(--apf-blue); border-bottom-color: var(--apf-blue); }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 0; }
+    section:nth-child(even) { background: var(--surface); }
+
+    /* ── OBJECTIFS ── */
+    .objectives-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem; margin-top: 2.5rem;
+    }
+    .obj-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      position: relative; overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .obj-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .obj-card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--apf-yellow);
+    }
+    .obj-card .icon { font-size: 1.6rem; margin-bottom: .75rem; }
+    .obj-card h3 { font-family: var(--font-head); font-size: 1rem; font-weight: 700; color: var(--apf-blue); margin-bottom: .4rem; }
+    .obj-card p { font-size: .9rem; color: var(--muted); }
+
+    /* ── PUBLIC ── */
+    .public-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+      margin-top: 2.5rem; align-items: start;
+    }
+    .info-block {
+      background: var(--bg); border-radius: var(--radius);
+      border: 1px solid var(--border); padding: 1.75rem;
+    }
+    .info-block h3 {
+      font-family: var(--font-head); font-size: .78rem; font-weight: 800;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--apf-yellow-dark);
+      margin-bottom: 1rem;
+    }
+    .info-block ul { list-style: none; }
+    .info-block li {
+      display: flex; gap: .75rem; align-items: flex-start;
+      padding: .5rem 0; border-bottom: 1px solid var(--border); font-size: .9rem;
+    }
+    .info-block li:last-child { border-bottom: none; }
+    .info-block li .check { color: var(--apf-blue); font-weight: 700; flex-shrink: 0; }
+
+    /* ── PROGRAMME ACCORDÉON ── */
+    .programme-intro {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      margin-bottom: 2.5rem; align-items: center;
+    }
+    .accordion { display: flex; flex-direction: column; gap: .75rem; }
+    .acc-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .acc-header {
+      width: 100%; background: none; border: none; cursor: pointer;
+      padding: 1.25rem 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+      text-align: left;
+    }
+    .acc-header:hover { background: var(--tag-bg); }
+    .acc-letter {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: var(--apf-blue); color: #fff;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head); font-weight: 800; font-size: 1rem;
+    }
+    .acc-header-info { flex: 1; }
+    .acc-title {
+      font-family: var(--font-head); font-size: 1rem; font-weight: 700;
+      color: var(--apf-blue);
+    }
+    .acc-meta { font-size: .78rem; color: var(--muted); margin-top: .2rem; }
+    .acc-arrow {
+      transition: transform .25s;
+      color: var(--apf-blue); font-size: 1rem; flex-shrink: 0;
+    }
+    .acc-item.open .acc-arrow { transform: rotate(180deg); }
+    .acc-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s cubic-bezier(.4,0,.2,1);
+    }
+    .acc-item.open .acc-body { max-height: 600px; }
+    .acc-content { padding: 0 1.5rem 1.5rem; border-top: 1px solid var(--border); }
+    .acc-content ul { list-style: none; margin-top: .75rem; }
+    .acc-content li {
+      padding: .4rem 0 .4rem 1.2rem; position: relative;
+      font-size: .9rem; border-bottom: 1px dashed var(--border);
+    }
+    .acc-content li:last-child { border-bottom: none; }
+    .acc-content li::before {
+      content: '→'; position: absolute; left: 0;
+      color: var(--apf-yellow-dark); font-weight: 700;
+    }
+    .module-table {
+      width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: .875rem;
+    }
+    .module-table th {
+      background: var(--tag-bg); color: var(--apf-blue);
+      font-family: var(--font-head); font-size: .72rem; font-weight: 800;
+      letter-spacing: .06em; text-transform: uppercase;
+      padding: .6rem 1rem; text-align: left;
+    }
+    .module-table td { padding: .6rem 1rem; border-bottom: 1px solid var(--border); }
+    .module-table tr:last-child td { border-bottom: none; }
+    .module-table tr:hover td { background: var(--tag-bg); }
+    .tool-badge {
+      display: inline-block; background: var(--tag-bg); color: var(--tag-color);
+      border-radius: 4px; padding: .15rem .5rem;
+      font-size: .72rem; font-weight: 600;
+    }
+
+    /* ── VIDÉO FORMATEUR ── */
+    .formateur-section {
+      background: var(--apf-blue) !important;
+    }
+    .formateur-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;
+    }
+    .formateur-text .section-label { color: rgba(255,255,255,.6); }
+    .formateur-text .section-title { color: #fff; }
+    .formateur-text p { color: rgba(255,255,255,.78); font-size: .95rem; margin-bottom: 1.5rem; }
+    .formateur-card {
+      display: flex; align-items: center; gap: 1rem;
+      background: rgba(255,255,255,.1); border-radius: var(--radius);
+      padding: 1.25rem; margin-bottom: 1.5rem;
+    }
+    .formateur-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--apf-yellow); color: var(--text);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head); font-weight: 800; font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .formateur-name { font-family: var(--font-head); font-weight: 700; color: #fff; font-size: .95rem; }
+    .formateur-title { font-size: .78rem; color: rgba(255,255,255,.65); }
+    .video-wrapper {
+      position: relative; padding-bottom: 56.25%; height: 0;
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: 0 16px 48px rgba(0,0,0,.35);
+    }
+    .video-wrapper iframe {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    }
+
+    /* ── ÉVALUATION ── */
+    .eval-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+    .eval-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem; text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: transform .2s;
+    }
+    .eval-card:hover { transform: translateY(-3px); }
+    .eval-card .big { font-family: var(--font-head); font-size: 2.5rem; font-weight: 800; color: var(--apf-blue); line-height: 1; }
+    .eval-card .big.red { color: var(--apf-yellow-dark); }
+    .eval-card p { font-size: .85rem; color: var(--muted); margin-top: .5rem; }
+
+    /* ── POINTS FORTS ── */
+    .strengths-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem; margin-top: 2.5rem;
+    }
+    .strength-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .strength-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .strength-card .icon-wrap {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: var(--tag-bg); display: flex; align-items: center;
+      justify-content: center; font-size: 1.3rem; margin-bottom: 1rem;
+    }
+    .strength-card h3 { font-family: var(--font-head); font-size: .95rem; font-weight: 700; color: var(--apf-blue); margin-bottom: .4rem; }
+    .strength-card p { font-size: .85rem; color: var(--muted); }
+
+    /* ── TÉLÉCHARGEMENTS ── */
+    .downloads-section { background: var(--surface) !important; }
+    .downloads-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 2.5rem; }
+    .download-card {
+      border: 2px solid var(--border); border-radius: var(--radius);
+      padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .download-card:hover { border-color: var(--apf-blue); box-shadow: var(--shadow); }
+    .download-card .doc-icon { font-size: 2rem; }
+    .download-card h3 { font-family: var(--font-head); font-size: .95rem; font-weight: 700; color: var(--text); }
+    .download-card p { font-size: .82rem; color: var(--muted); flex: 1; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text); color: rgba(255,255,255,.8);
+      padding: 3rem 0 2rem;
+    }
+    .footer-inner {
+      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2.5rem;
+      max-width: 1080px; margin: 0 auto; padding: 0 1.5rem;
+    }
+    .footer-brand .logo-placeholder { background: rgba(255,255,255,.1); }
+    .footer-brand .logo-fallback { color: rgba(255,255,255,.9); }
+    footer h4 {
+      font-family: var(--font-head); font-size: .72rem; font-weight: 800;
+      letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.45);
+      margin-bottom: .8rem;
+    }
+    footer p, footer a { font-size: .87rem; color: rgba(255,255,255,.75); text-decoration: none; line-height: 1.7; }
+    footer a:hover { color: var(--apf-yellow); }
+    footer ul { list-style: none; }
+    footer ul li { margin-bottom: .4rem; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.1);
+      margin-top: 2rem; padding-top: 1.5rem;
+      text-align: center; font-size: .78rem; color: rgba(255,255,255,.4);
+      max-width: 1080px; margin-left: auto; margin-right: auto; padding-left: 1.5rem; padding-right: 1.5rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .header-inner, .formateur-inner, .public-grid { grid-template-columns: 1fr; }
+      .hero-stats { grid-template-columns: repeat(3,1fr); gap: .5rem; }
+      .stat-card .number { font-size: 1.4rem; }
+      .footer-inner { grid-template-columns: 1fr; }
+      .nav-anchor ul { gap: 0; }
+    }
+
+    /* ── FADE-IN ANIMATION ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-eyebrow { animation: fadeUp .5s ease both; }
+    .hero-title   { animation: fadeUp .5s .1s ease both; }
+    .hero-sub     { animation: fadeUp .5s .2s ease both; }
+    .hero-ctas    { animation: fadeUp .5s .3s ease both; }
+    .hero-stats   { animation: fadeUp .5s .15s ease both; }
+  </style>
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Aller au contenu principal</a>
+
+  <!-- ══════════════ HEADER / HERO ══════════════ -->
+  <header role="banner">
+    <div class="header-inner">
+      <!-- LEFT : texte -->
+      <div>
+        <div class="header-logo-bar">
+          <div class="logo-placeholder" aria-label="Logo APF France handicap">
+            <!-- Remplacez par : <img src="logo.png" alt="APF France handicap" /> -->
+            <div class="logo-fallback">APF<br>France handicap</div>
+          </div>
+          <span class="header-qualiopi">✓ Qualiopi</span>
+        </div>
+
+        <p class="hero-eyebrow">Formation interne · Blended learning · Mai 2026</p>
+        <h1 class="hero-title">
+          Gestion de projet &<br><span>Collaboration asynchrone</span>
+        </h1>
+        <p class="hero-sub">
+          Comprendre son rôle et collaborer efficacement sur le projet APF grâce à Microsoft 365 — parcours adaptatif, 100 % ancré sur le projet réel.
+        </p>
+        <div class="hero-ctas">
+          <a href="#programme" class="btn btn-primary" style="color:var(--text);">Voir le programme</a>
+          <a href="#telechargements" class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,.5);">Télécharger les documents</a>
+        </div>
+        <div class="hero-format-pills">
+          <span class="pill">📱 E-learning</span>
+          <span class="pill">🎥 Visio collective</span>
+          <span class="pill">👤 Debrief 1:1</span>
+          <span class="pill">♿ Accessible</span>
+        </div>
+      </div>
+
+      <!-- RIGHT : stats -->
+      <div>
+        <div class="hero-stats">
+          <div class="stat-card">
+            <div class="number">2h45<span class="stat-accent">*</span></div>
+            <div class="label">durée max par apprenant</div>
+          </div>
+          <div class="stat-card">
+            <div class="number">8</div>
+            <div class="label">personnes max par groupe</div>
+          </div>
+          <div class="stat-card">
+            <div class="number">5</div>
+            <div class="label">modules e-learning</div>
+          </div>
+        </div>
+        <p style="font-size:.75rem;color:rgba(255,255,255,.45);margin-top:.75rem;text-align:center;">* Parcours adaptatif : vous ne suivez que les modules utiles</p>
+      </div>
+    </div>
+    <div class="header-stripe" aria-hidden="true"></div>
+  </header>
+
+  <!-- ══════════════ NAV ANCRES ══════════════ -->
+  <nav class="nav-anchor" aria-label="Navigation rapide">
+    <ul role="list">
+      <li><a href="#objectifs">Objectifs</a></li>
+      <li><a href="#public">Public</a></li>
+      <li><a href="#programme">Programme</a></li>
+      <li><a href="#formateur">Formateur</a></li>
+      <li><a href="#evaluation">Évaluation</a></li>
+      <li><a href="#points-forts">Points forts</a></li>
+      <li><a href="#telechargements">Documents</a></li>
+    </ul>
+  </nav>
+
+  <main id="main">
+
+    <!-- ══════════════ OBJECTIFS ══════════════ -->
+    <section id="objectifs" aria-labelledby="h-objectifs">
+      <div class="container">
+        <p class="section-label">Ce que vous apprendrez</p>
+        <h2 class="section-title" id="h-objectifs">Objectifs pédagogiques</h2>
+        <p style="color:var(--muted);max-width:580px;margin-bottom:0;">À l'issue du parcours, chaque membre de l'équipe projet APF sera capable de :</p>
+        <div class="objectives-grid">
+          <div class="obj-card">
+            <div class="icon" aria-hidden="true">🗂️</div>
+            <h3>Reconnaître les outils clés</h3>
+            <p>Identifier et utiliser les fonctionnalités essentielles de Microsoft 365 pour un projet APF.</p>
+          </div>
+          <div class="obj-card">
+            <div class="icon" aria-hidden="true">🤝</div>
+            <h3>Collaborer en asynchrone</h3>
+            <p>Travailler efficacement avec son équipe sans contrainte de synchronisation temporelle.</p>
+          </div>
+          <div class="obj-card">
+            <div class="icon" aria-hidden="true">🎯</div>
+            <h3>Clarifier son rôle</h3>
+            <p>Identifier ses responsabilités précises au sein de l'équipe projet APF France handicap.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ PUBLIC & PRÉREQUIS ══════════════ -->
+    <section id="public" aria-labelledby="h-public">
+      <div class="container">
+        <p class="section-label">À qui s'adresse cette formation ?</p>
+        <h2 class="section-title" id="h-public">Public & prérequis</h2>
+        <div class="public-grid">
+          <div class="info-block">
+            <h3>Public visé</h3>
+            <ul>
+              <li><span class="check">→</span> Tout membre d'une équipe projet APF France handicap</li>
+              <li><span class="check">→</span> Groupes de 8 personnes maximum</li>
+              <li><span class="check">→</span> Formation interne APF — non ouverte au public</li>
+            </ul>
+          </div>
+          <div class="info-block">
+            <h3>Prérequis</h3>
+            <ul>
+              <li><span class="check">✓</span> Maîtriser Outlook (messagerie, calendrier)</li>
+              <li><span class="check">✓</span> Maîtriser Word (base)</li>
+              <li><span class="check" style="color:var(--apf-blue)">✗</span> Aucune connaissance préalable en gestion de projet requise</li>
+              <li><span class="check" style="color:var(--apf-blue)">✗</span> Aucune connaissance préalable de SharePoint requise</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ PROGRAMME ══════════════ -->
+    <section id="programme" aria-labelledby="h-programme">
+      <div class="container">
+        <p class="section-label">Déroulement du parcours</p>
+        <h2 class="section-title" id="h-programme">Programme en 4 étapes</h2>
+        <div class="programme-intro">
+          <span class="tag">🗓 Mai 2026</span>
+          <span class="tag">🌐 100% à distance</span>
+          <span class="tag">⏱ 2h45 max</span>
+        </div>
+
+        <div class="accordion" role="list">
+
+          <!-- A -->
+          <div class="acc-item open" role="listitem">
+            <button class="acc-header" aria-expanded="true" aria-controls="acc-a" onclick="toggleAcc(this)">
+              <div class="acc-letter" aria-hidden="true">A</div>
+              <div class="acc-header-info">
+                <div class="acc-title">Vidéo d'introduction & Auto-évaluation</div>
+                <div class="acc-meta">⏱ 20 minutes · E-learning</div>
+              </div>
+              <span class="acc-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div class="acc-body" id="acc-a" role="region">
+              <div class="acc-content">
+                <ul>
+                  <li>Vidéo de contextualisation : enjeux du projet APF et objectifs du parcours</li>
+                  <li>Quiz de positionnement sur 5 compétences clés (Outlook, Word Online, Commentaires, Planner, SharePoint)</li>
+                  <li>Orientation automatique vers les modules à suivre selon les résultats</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- B -->
+          <div class="acc-item" role="listitem">
+            <button class="acc-header" aria-expanded="false" aria-controls="acc-b" onclick="toggleAcc(this)">
+              <div class="acc-letter" aria-hidden="true">B</div>
+              <div class="acc-header-info">
+                <div class="acc-title">Modules e-learning personnalisés</div>
+                <div class="acc-meta">⏱ 10 min / module · jusqu'à 50 min · Déclenchés selon besoins</div>
+              </div>
+              <span class="acc-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div class="acc-body" id="acc-b" role="region">
+              <div class="acc-content">
+                <p style="font-size:.88rem;color:var(--muted);margin-top:.75rem;margin-bottom:.5rem;">Seuls les modules non maîtrisés lors du quiz de positionnement sont déclenchés.</p>
+                <table class="module-table" aria-label="Liste des modules e-learning">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Compétence</th>
+                      <th>Outil Microsoft</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1</td><td>Mon rôle dans le projet</td><td>—</td></tr>
+                    <tr><td>2</td><td>Gérer son calendrier et ses disponibilités</td><td><span class="tool-badge">Outlook</span></td></tr>
+                    <tr><td>3</td><td>Collaborer sur un document : mode révision et commentaires</td><td><span class="tool-badge">Word Online</span></td></tr>
+                    <tr><td>4</td><td>Gérer et suivre les tâches du projet</td><td><span class="tool-badge">Planner</span></td></tr>
+                    <tr><td>5</td><td>Naviguer dans SharePoint, déposer et retrouver un document</td><td><span class="tool-badge">SharePoint</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- C -->
+          <div class="acc-item" role="listitem">
+            <button class="acc-header" aria-expanded="false" aria-controls="acc-c" onclick="toggleAcc(this)">
+              <div class="acc-letter" aria-hidden="true">C</div>
+              <div class="acc-header-info">
+                <div class="acc-title">Séance collective en visio</div>
+                <div class="acc-meta">⏱ 60 minutes · Animée par le formateur</div>
+              </div>
+              <span class="acc-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div class="acc-body" id="acc-c" role="region">
+              <div class="acc-content">
+                <ul>
+                  <li>Mise en pratique sur le projet réel APF avec toute l'équipe</li>
+                  <li>Animation par le formateur — mise en situation collaborative sur Microsoft 365</li>
+                  <li>Exercices en temps réel : SharePoint, Planner, Word Online</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- D -->
+          <div class="acc-item" role="listitem">
+            <button class="acc-header" aria-expanded="false" aria-controls="acc-d" onclick="toggleAcc(this)">
+              <div class="acc-letter" style="background:var(--apf-yellow-dark);" aria-hidden="true">D</div>
+              <div class="acc-header-info">
+                <div class="acc-title">Debrief personnalisé one-to-one</div>
+                <div class="acc-meta">⏱ 15 à 30 min · Individuel · Pour tous les apprenants</div>
+              </div>
+              <span class="acc-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div class="acc-body" id="acc-d" role="region">
+              <div class="acc-content">
+                <ul>
+                  <li>Retour individuel sur les acquis et points de vigilance de chaque apprenant</li>
+                  <li>Plan d'action personnel pour le retour en situation projet</li>
+                  <li>Séance pour tous les apprenants, durée adaptée au profil</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ FORMATEUR / VIDÉO ══════════════ -->
+    <section id="formateur" class="formateur-section" aria-labelledby="h-formateur">
+      <div class="container">
+        <div class="formateur-inner">
+          <div class="formateur-text">
+            <p class="section-label">Mot du formateur</p>
+            <h2 class="section-title" id="h-formateur">Votre formateur</h2>
+            <div class="formateur-card">
+              <div class="formateur-avatar" aria-hidden="true">JL</div>
+              <div>
+                <div class="formateur-name">Joffrey Leignel</div>
+                <div class="formateur-title">Formateur — APF France handicap</div>
+              </div>
+            </div>
+            <p>Découvrez en vidéo les enjeux de cette formation et ce qu'elle va vous apporter concrètement dans votre quotidien au sein du projet APF.</p>
+            <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+              <a href="/cdn-cgi/l/email-protection#640e0b020216011d4a08010d030a0108240514024a0517170b4a0216" class="btn btn-primary" style="color:var(--text);">
+                ✉️ Contacter le formateur
+              </a>
+              <a href="https://www.linkedin.com/in/joffrey-leignel-3000/" target="_blank" rel="noopener noreferrer" class="btn" style="background:rgba(255,255,255,.15);color:#fff;">
+                🔗 LinkedIn
+              </a>
+            </div>
+          </div>
+          <div>
+            <div class="video-wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/ZP7T6WAK3Ow"
+                title="Mot du formateur — Formation Gestion de projet APF France handicap"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ ÉVALUATION ══════════════ -->
+    <section id="evaluation" aria-labelledby="h-eval">
+      <div class="container">
+        <p class="section-label">Comment suis-je évalué·e ?</p>
+        <h2 class="section-title" id="h-eval">Évaluation & validation</h2>
+        <div class="eval-grid">
+          <div class="eval-card">
+            <div class="big">Quiz</div>
+            <p>Positionnement initial pour adapter le parcours à chaque apprenant</p>
+          </div>
+          <div class="eval-card">
+            <div class="big">6</div>
+            <p>Questions d'évaluation finale via Microsoft Forms</p>
+          </div>
+          <div class="eval-card">
+            <div class="big red">70%</div>
+            <p>Seuil de réussite pour l'obtention de l'attestation</p>
+          </div>
+          <div class="eval-card">
+            <div class="big">Auto</div>
+            <p>Attestation générée automatiquement via Power Automate</p>
+          </div>
+        </div>
+        <p style="font-size:.85rem;color:var(--muted);margin-top:1.5rem;">
+          📊 Les résultats sont transmis au formateur via SharePoint pour le suivi Qualiopi.
+        </p>
+      </div>
+    </section>
+
+    <!-- ══════════════ POINTS FORTS ══════════════ -->
+    <section id="points-forts" aria-labelledby="h-pts">
+      <div class="container">
+        <p class="section-label">Pourquoi cette formation ?</p>
+        <h2 class="section-title" id="h-pts">Les points forts du parcours</h2>
+        <div class="strengths-grid">
+          <div class="strength-card">
+            <div class="icon-wrap" aria-hidden="true">🎯</div>
+            <h3>Parcours adaptatif</h3>
+            <p>Chaque apprenant ne suit que les modules dont il a besoin, selon son quiz initial.</p>
+          </div>
+          <div class="strength-card">
+            <div class="icon-wrap" aria-hidden="true">⏰</div>
+            <h3>100% asynchrone</h3>
+            <p>Les modules e-learning sont accessibles à tout moment, sans contrainte de synchronisation.</p>
+          </div>
+          <div class="strength-card">
+            <div class="icon-wrap" aria-hidden="true">🏗️</div>
+            <h3>Ancré sur le projet réel</h3>
+            <p>Mises en situation sur les vrais outils et contextes de l'équipe projet APF.</p>
+          </div>
+          <div class="strength-card">
+            <div class="icon-wrap" aria-hidden="true">♿</div>
+            <h3>Supports inclusifs</h3>
+            <p>Police sans serif, contrastes élevés, micro-séquences sans pression temporelle.</p>
+          </div>
+          <div class="strength-card">
+            <div class="icon-wrap" aria-hidden="true">🔄</div>
+            <h3>Réutilisable</h3>
+            <p>Déployable sur plusieurs projets APF sans modification du parcours.</p>
+          </div>
+          <div class="strength-card">
+            <div class="icon-wrap" aria-hidden="true">🏅</div>
+            <h3>Conforme Qualiopi</h3>
+            <p>Conçue en conformité avec le référentiel qualité APF France handicap.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ TÉLÉCHARGEMENTS ══════════════ -->
+    <section id="telechargements" class="downloads-section" aria-labelledby="h-dl">
+      <div class="container">
+        <p class="section-label">Ressources</p>
+        <h2 class="section-title" id="h-dl">Documents à télécharger</h2>
+        <div class="downloads-grid">
+
+          <div class="download-card">
+            <div class="doc-icon" aria-hidden="true">📄</div>
+            <h3>Programme de formation</h3>
+            <p>Le programme détaillé du parcours Gestion de projet &amp; Collaboration asynchrone — Onboarding Projet APF.</p>
+            <a href="programme_formation-onboardingprojet.pdf" download class="btn btn-primary" aria-label="Télécharger le programme de formation (PDF)">
+              ⬇️ Télécharger le programme
+            </a>
+          </div>
+
+          <div class="download-card">
+            <div class="doc-icon" aria-hidden="true">📋</div>
+            <h3>Support de formation</h3>
+            <p>Le support complet de la formation Gestion asynchrone pour les équipes projet APF France handicap.</p>
+            <a href="support_formation_gestion_de_projet_pour_les_equipes.pdf" download class="btn btn-primary" style="color:var(--text);" aria-label="Télécharger le support de formation (PDF)">
+              ⬇️ Télécharger le support
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer role="contentinfo" style="background:var(--apf-blue);">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo-placeholder" style="margin-bottom:1rem;">
+          <!-- <img src="logo.png" alt="APF France handicap" /> -->
+          <div class="logo-fallback">APF<br>France handicap</div>
+        </div>
+        <p>Formation interne APF France handicap<br>Blended learning — Qualiopi</p>
+      </div>
+      <div>
+        <h4>Contact formateur</h4>
+        <ul>
+          <li><strong style="color:#fff;">Joffrey Leignel</strong></li>
+          <li><a href="/cdn-cgi/l/email-protection#abc1c4cdcdd9ced285c7cec2ccc5cec7ebcadbcd85cad8d8c485cdd9"><span class="__cf_email__" data-cfemail="1a70757c7c687f6334767f737d747f765a7b6a7c347b696975347c68">[email&#160;protected]</span></a></li>
+          <li><a href="https://www.linkedin.com/in/joffrey-leignel-3000/" target="_blank" rel="noopener noreferrer">Profil LinkedIn</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Inclusion & Handicap</h4>
+        <ul>
+          <li><a href="https://www.linkedin.com/in/joffrey-leignel-3000/" target="_blank" rel="noopener noreferrer">Politique d'inclusion et gestion du handicap</a></li>
+          <li><a href="https://www.apf-francehandicap.org" target="_blank" rel="noopener noreferrer">APF France handicap</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 APF France handicap · Formation interne · Tous droits réservés · Conforme RGAA</p>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    function toggleAcc(btn) {
+      const item = btn.closest('.acc-item');
+      const isOpen = item.classList.contains('open');
+      // Fermer tous
+      document.querySelectorAll('.acc-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.acc-header').setAttribute('aria-expanded', 'false');
+      });
+      // Ouvrir celui-ci si pas déjà ouvert
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    // Highlight nav on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-anchor a');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(a => {
+            a.style.color = '';
+            a.style.borderBottomColor = '';
+          });
+          const active = document.querySelector(`.nav-anchor a
